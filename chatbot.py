@@ -31,7 +31,7 @@ def chat():
         if inp.lower() == "quit":
             break
         
-        result = model.predict(keras.preprocessing.sequence.pad_sequences(tokenizer.texts_to_sequences([inp]),truncating='post', maxlen=max_len))
+        result = model.predict(keras.preprocessing.sequence.pad_sequences(tokenizer.texts_to_sequences([inp]),truncating='post', maxlen=max_len), verbose = 0)
         
         tag = lbl_encoder.inverse_transform([np.argmax(result)])
         

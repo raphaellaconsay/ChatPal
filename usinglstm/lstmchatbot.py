@@ -26,7 +26,7 @@ def preprocess_input(text):
 # Define a function to generate a response
 def generate_response(text):
     preprocessed_input = preprocess_input(text)
-    predictions = model.predict(preprocessed_input)
+    predictions = model.predict(preprocessed_input, verbose=0)
     predicted_class_index = np.argmax(predictions)
     predicted_class = label_encoder.inverse_transform([predicted_class_index])[0]
     response = responses[predicted_class_index]

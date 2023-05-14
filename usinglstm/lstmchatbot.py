@@ -1,47 +1,43 @@
-import numpy as np
-import pickle
-from tensorflow import keras
-from keras.utils import pad_sequences
 import json
+import numpy as np
+from tensorflow import keras
+from sklearn.preprocessing import LabelEncoder
 
-# Load the saved model, tokenizer, and label encoder
-with open('chatbot_model.pkl', 'rb') as file:
-    model = pickle.load(file)
+import colorama
+colorama.init()
+from colorama import Fore, Style, Back
 
-with open('tokenizer.pkl', 'rb') as file:
-    tokenizer = pickle.load(file)
+import random
+import pickle
 
-with open('label_encoder.pkl', 'rb') as file:
-    label_encoder = pickle.load(file)
-
-# Define the maximum sequence length
-max_sequence_len = model.input_shape[1]
-
-# Define a function to preprocess user input
-def preprocess_input(text):
-    sequence = tokenizer.texts_to_sequences([text])
-    padded_sequence = pad_sequences(sequence, maxlen=max_sequence_len, padding='post')
-    return padded_sequence
-
-# Define a function to generate a response
-def generate_response(text):
-    preprocessed_input = preprocess_input(text)
-    predictions = model.predict(preprocessed_input, verbose=0)
-    predicted_class_index = np.argmax(predictions)
-    predicted_class = label_encoder.inverse_transform([predicted_class_index])[0]
-    response = responses[predicted_class_index]
-    return response
-
-# Load the responses from the intents dataset
 with open('intents.json') as file:
-    intents = json.load(file)
-
-responses = []
-for intent in intents['intents']:
-    responses.append(intent['responses'][0])
-
-# Chatbot interaction loop
-while True:
-    user_input = input("User: ")
-    response = generate_response(user_input)
-    print("Chatbot:", response)
+    data = json.load(file)
+    
+def chat():
+    # load trained model
+    model = keras.models.load_model('chat_modelLSTM')
+    
+    with open('tokenizer.pickle', 'rb') as handle:
+        tokenizer = pickle.load(handle)
+    
+    with open('label_encoder.pickle', 'rb') as enc:
+        lbl_encoder = pickle.load(enc)
+    
+    max_len = 20
+    
+    while True:
+        print(Fore.LIGHTBLUE_EX + "User: " + Style.RESET_ALL, end="")
+        inp = input()
+        if inp.lower() == "quit":
+            break
+        
+        result = model.predict(keras.preprocessing.sequence.pad_sequences(tokenizer.texts_to_sequences([inp]),truncating='post', maxlen=max_len), verbose = 0)
+        
+        tag = lbl_encoder.inverse_transform([np.argmax(result)])
+        
+        for i in data['intents']:
+            if i['tag'] == tag:
+                print(Fore.GREEN + "ChatBot:" + Style.RESET_ALL, np.random.choice(i['responses']))
+        
+print(Fore.YELLOW + "Start messaging with the bot (type quit to stop)!" + Style.RESET_ALL)
+chat()

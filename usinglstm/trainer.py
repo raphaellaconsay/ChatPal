@@ -8,57 +8,60 @@ from keras.preprocessing.text import Tokenizer
 from keras.utils import pad_sequences
 from sklearn.preprocessing import LabelEncoder
 
-# Load the intents dataset
 with open('intents.json') as file:
-    intents = json.load(file)
+    data = json.load(file)
 
-# Extract the patterns and responses from the intents
-patterns = []
+training_sentences = []
+training_labels = []
+labels = []
 responses = []
-tags = []
-for intent in intents['intents']:
+
+for intent in data['intents']:
     for pattern in intent['patterns']:
-        patterns.append(pattern.lower())  # Convert to lowercase
-        responses.append(intent['responses'][0].lower())  # Convert to lowercase
-    tags.append(intent['tag'])
+        training_sentences.append(pattern)
+        training_labels.append(intent['tag'])
+    responses.append(intent['responses'])
 
-# Tokenize the patterns
-tokenizer = Tokenizer(lower=True)  # Set 'lower' to True for case insensitivity
-tokenizer.fit_on_texts(patterns)
-vocab_size = len(tokenizer.word_index) + 1
+    if intent['tag'] not in labels:
+        labels.append(intent['tag'])
 
-# Convert patterns to sequences of integers
-sequences = tokenizer.texts_to_sequences(patterns)
-max_sequence_len = max(len(seq) for seq in sequences)
+num_classes = len(labels)
 
-# Pad sequences to have the same length
-padded_sequences = pad_sequences(sequences, maxlen=max_sequence_len, padding='post')
+# Label encoding
+lbl_encoder = LabelEncoder()
+lbl_encoder.fit(training_labels)
+training_labels = lbl_encoder.transform(training_labels)
 
-# Encode the responses using LabelEncoder
-label_encoder = LabelEncoder()
-encoded_responses = label_encoder.fit_transform(responses)
+# Tokenization and padding
+vocab_size = 2000
+embedding_dim = 32
+max_len = 20
+oov_token = "<OOV>"
 
-# Define the model architecture
+tokenizer = Tokenizer(num_words=vocab_size, oov_token=oov_token)
+tokenizer.fit_on_texts(training_sentences)
+word_index = tokenizer.word_index
+sequences = tokenizer.texts_to_sequences(training_sentences)
+padded_sequences = pad_sequences(sequences, truncating='post', maxlen=max_len)
+
+# Model architecture
 model = Sequential()
-model.add(Embedding(vocab_size, 128, input_length=max_sequence_len))
-model.add(LSTM(128, dropout=0.2, recurrent_dropout=0.2))
-model.add(Dense(64, activation='relu'))
-model.add(Dropout(0.5))
-model.add(Dense(len(label_encoder.classes_), activation='softmax'))  # Use the number of classes as the output size
+model.add(Embedding(vocab_size, embedding_dim, input_length=max_len))
+model.add(LSTM(64))  # Adjust the number of LSTM units
+model.add(Dropout(0.2))  # Add dropout regularization
+model.add(Dense(16, activation='relu'))
+model.add(Dense(num_classes, activation='softmax'))
 
-# Compile the model
 model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
-# Train the model
-model.fit(padded_sequences, encoded_responses, epochs=200, batch_size=16)
+model.summary()
+epochs = 500
+history = model.fit(padded_sequences, np.array(training_labels), epochs=epochs)
 
-# Save the trained model using pickle
-with open('chatbot_model.pkl', 'wb') as file:
-    pickle.dump(model, file)
+model.save("chat_modelLSTM")
 
-# Save the tokenizer and label encoder for future use
-with open('tokenizer.pkl', 'wb') as file:
-    pickle.dump(tokenizer, file)
+with open('tokenizer.pickle', 'wb') as handle:
+    pickle.dump(tokenizer, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
-with open('label_encoder.pkl', 'wb') as file:
-    pickle.dump(label_encoder, file)
+with open('label_encoder.pickle', 'wb') as ecn_file:
+    pickle.dump(lbl_encoder, ecn_file, protocol=pickle.HIGHEST_PROTOCOL)

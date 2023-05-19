@@ -1,42 +1,164 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Chatbot</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <title>ChatPal</title>
+    
 </head>
 <body>
-    <h1>Chatbot</h1>
-    <div id="chat-container">
-        <div id="chat-log"></div>
-        <div id="user-input">
-            <input type="text" id="user-input-box" autofocus />
-            <button onclick="submitUserInput()">Send</button>
+    <div class="container">
+        <div id ="sidebar">
+            <h2>Chats</h2>
+            <button id="new-chat-button">+ CHAT</button>
+            <ul id ="chat-list"></ul>
         </div>
+    
+        <div id = "main-content">
+            <div id="chat-container">
+                <div id ="brand">Chat Pal</div>
+                <div id="chat-log"></div>
+                <div id="user-input">
+                    <input type="text" id="user-input-box" autofocus />
+                    <button onclick="submitUserInput()">
+                    <img class="button-icon" src = "{{ url_for('static', filename='SendMessage.png') }}" alt ="Send"/>
+                    </button>
+                </div>
+            </div>
+        </div>
+
     </div>
+    
+
+
     <script>
+        const chatHistory = {};
+        let currentChatId = 0;
+
+        function switchChat(chatId){
+            const chatLog = document.getElementById('chat-log');
+
+            clearChatLog(chatLog);
+            currentChatId = chatId; // Set the current chat ID
+            chatHistory[chatId].forEach((message) => {
+                appendToChatLog(message.type, message.content);
+            });
+         
+        }
+
+        function clearChatLog(chatLog) {
+            while (chatLog.firstChild) {
+                chatLog.firstChild.remove();
+            }
+        }
+
+
+        // Function to handle the click event on chat list items
+        function handleChatItemClick(event) {
+            const chatId = event.target.dataset.chatId;
+            if(chatId === currentChatId){ // No need to switch
+                return;
+            }
+            switchChat(chatId);
+        }
+
+        // Function to create a chat list item
+        function createChatListItem(chatId) {
+            const listItem = document.createElement('li');
+            listItem.textContent = `Chat ${chatId}`;
+            listItem.dataset.chatId = chatId;
+            listItem.addEventListener('click', handleChatItemClick);
+            return listItem;
+        }
+
+        function addNewChat(chatId) {
+            const chatList = document.getElementById('chat-list');
+            const listItem = createChatListItem(chatId);
+            chatList.appendChild(listItem);
+            currentChatId = chatId; // Set the current chat ID to the newly created chat
+            chatHistory[currentChatId] = []; 
+            
+        }
+
+        function handleNewChatButtonClick() {
+            const chatIds = Object.keys(chatHistory);
+            let maxChatId = 0;
+            if(chatIds.length > 0){
+                maxChatId = Math.max(...chatIds);
+            }
+
+            const chatId = maxChatId +1;
+            addNewChat(chatId);
+        }
+
         function submitUserInput() {
             const userInputBox = document.getElementById('user-input-box');
             const userInput = userInputBox.value.trim();
             if (userInput !== '') {
-                appendToChatLog(`User: ${userInput}`);
-                userInputBox.value = '';
-                fetch('/get_response', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: `user_input=${encodeURIComponent(userInput)}`,
-                })
-                    .then((response) => response.text())
-                    .then((response) => appendToChatLog(`ChatBot: ${response}`));
+                appendToChatLog('user-message', userInput);
+                chatHistory[currentChatId].push({ type: 'user-message', content: userInput });
+                userInputBox.value ='';
+
+                //const typingMessage = appendToChatLog('bot-message', 'ChatPal is typing...');
+                
+
+                    fetch('/get_response', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: `user_input=${encodeURIComponent(userInput)}`,
+                    })
+                        .then((response) => response.text())
+                        .then((response) => {
+                            //typingMessage.remove(); // Removes the is typing text after the pause.
+                            appendToChatLog('bot-message',response);
+                            chatHistory[currentChatId].push({ type: 'bot-message', content: response });
+                        
+                        });
             }
         }
 
-        function appendToChatLog(message) {
+        function appendToChatLog(messageType, message) {
             const chatLog = document.getElementById('chat-log');
-            const newMessage = document.createElement('p');
-            newMessage.textContent = message;
-            chatLog.appendChild(newMessage);
+            const messageContainer = document.createElement('div');
+            messageContainer.classList.add('message');
+            messageContainer.classList.add(messageType);
+
+            const msgBubble = document.createElement('div');
+            msgBubble.classList.add('message-bubble');
+            msgBubble.textContent = message;
+
+            messageContainer.appendChild(msgBubble);
+            chatLog.insertBefore(messageContainer, chatLog.firstChild);
+
+            chatLog.scrollTop = chatLog.scrollHeight;
         }
+
+
+        //TO SEND MESSAGE WHEN ENTER KEY IS PRESSED
+        document.getElementById('user-input-box').addEventListener('keyup', function(event){
+            if (event.keyCode === 13) { // Check if Enter key was pressed
+            event.preventDefault();
+
+            submitUserInput();
+            }
+        });
+
+        // Add event listener to the "New Chat" button
+        const newChatButton = document.getElementById('new-chat-button');
+        newChatButton.addEventListener('click', handleNewChatButtonClick);
+
+        // Initial setup
+        addNewChat(1); 
+        switchChat(1);
+
+
+
+
+
+        
     </script>
+
+    
 </body>
 </html>

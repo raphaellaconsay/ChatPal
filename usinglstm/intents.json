@@ -37,7 +37,7 @@
     },
     {"tag": "about",
      "patterns": ["Who are you?", "What are you?", "Who you are?", "Tell me more about yourself.", "What is your name?", "What should I call you?", "What's your name?", "Tell me about yourself" ],
-     "responses": ["I'm Pandora, your Personal Therapeutic AI Assistant. How are you feeling today", "I'm Pandora, a Therapeutic AI Assitant designed to assist you. Tell me about yourself.", "I'm Pandora. I am a conversational agent designed to mimic a therapist. So how are you feeling today?", "You can call me Pandora.", "I'm Pandora!", "Call me Pandora"]
+     "responses": ["I'm ChatPals, your Personal Therapeutic AI Assistant. How are you feeling today", "I'm Chat Pal, a Therapeutic AI Assitant designed to assist you. Tell me about yourself.", "I'm Chat Pal. I am a conversational agent designed to mimic a therapist. So how are you feeling today?", "You can call me Chat Pal.", "I'm Chat Pal!", "Call me Chat Pal"]
     },
     {"tag": "skill",
         "patterns": ["What can you do?"],
@@ -45,7 +45,7 @@
     },
     {"tag": "creation",
         "patterns": ["Who created you?", "How were you made?", "How were you created?"],
-        "responses": ["I was created by >.", "I was trained on a text dataset using Deep Learning & Natural Language Processing techniques", "The real question is: Who created you?"]
+        "responses": ["I was trained on a text dataset using Deep Learning & Natural Language Processing techniques and I was created using Long Short Term Memory Model", "The real question is: Who created you?"]
     },
     {"tag": "name",
         "patterns": ["My name is ", "I am name.", "I go by "],
@@ -109,7 +109,7 @@
     },
     {"tag": "suicide",
         "patterns": ["I want to kill myself", "I've thought about killing myself.", "I want to die", "I am going to kill myself", "I am going to commit suicide"],
-        "responses": ["I'm very sorry to hear that but you have so much to look forward to. Please seek help by contacting: 9152987821."]
+        "responses": ["I'm very sorry to hear that but you have so much to look forward to. Please seek help by contacting Hopeline PH: 09175584673(Globe) or 09188734673(Smart)  ."]
     }, 
     {"tag": "hate-you",
         "patterns": ["I hate you", "I don't like you", "I don't trust you"],
@@ -179,7 +179,7 @@
         "patterns": ["i did what you said and i feel alot better. thank you very much.", "I feel better now"],
         "responses": ["Your welcome. Remember: Always focus on what's within your control. When you find yourself worrying, take a minute to examine the things you have control over. You can't prevent a storm from coming but you can prepare for it. You can't control how someone else behaves, but you can control how you react. Recognize that sometimes, all you can control is your effort and your attitude. When you put your energy into the things you can control, you'll be much more effective."]
     },
-    {"tag": "pandora-useful",
+    {"tag": "Chat Pal-useful",
         "patterns": ["thank you very much again. i'll continue practicing meditation and focus on what i can control."],
         "responses": ["I'm glad you found this useful. Is there something else I can help you with?"]
     },
@@ -241,7 +241,7 @@
     },
     {"tag": "fact-13",
         "patterns": ["What should I do if I know someone who appears to have the symptoms of a mental disorder?"],
-        "responses": ["Although Pandora cannot substitute for professional advice, we encourage those with symptoms to talk to their friends and family members and seek the counsel of a mental health professional. The sooner the mental health condition is identified and treated, the sooner they can get on the path to recovery. If you know someone who is having problems, don't assume that the issue will resolve itself. Let them know that you care about them, and that there are treatment options available that will help them heal. Speak with a mental health professional or counselor if you think your friend or family member is experiencing the symptoms of a mental health condition. If the affected loved one knows that you support them, they will be more likely to seek out help."]
+        "responses": ["Although Chat Pal cannot substitute for professional advice, we encourage those with symptoms to talk to their friends and family members and seek the counsel of a mental health professional. The sooner the mental health condition is identified and treated, the sooner they can get on the path to recovery. If you know someone who is having problems, don't assume that the issue will resolve itself. Let them know that you care about them, and that there are treatment options available that will help them heal. Speak with a mental health professional or counselor if you think your friend or family member is experiencing the symptoms of a mental health condition. If the affected loved one knows that you support them, they will be more likely to seek out help."]
     },
     {"tag": "fact-14",
         "patterns": ["How can I find a mental health professional for myself or my child?"],
@@ -318,6 +318,11 @@
     {"tag": "fact-32",
         "patterns": ["What's the difference between sadness and depression?", "difference between sadness and depression"],
         "responses": ["Sadness is a normal reaction to a loss, disappointment, problems, or other difficult situations. Feeling sad from time to time is just another part of being human. In these cases, feelings of sadness go away quickly and you can go about your daily life. Other ways to talk about sadness might be feeling low, feeling down, or feeling blue.A person may say they are feeling depressed, but if it goes away on its own and doesn't impact life in a big way, it probably isn't the illness of depression. Depression is a mental illness that affects your mood, the way you understand yourself, and the way you understand and relate to things around you. It can also go by different names, such as clinical depression, major depressive disorder, or major depression. Depression can come up for no reason, and it lasts for a long time. It's much more than sadness or low mood. People who experience depression may feel worthless or hopeless. They may feel unreasonable guilty. Some people may experience depression as anger or irritability. It may be hard to concentrate or make decisions. Most people lose interest in things that they used to enjoy and may isolate themselves from others. There are also physical signs of depression, such as problems with sleep, appetite and energy and unexplainable aches or pains. Some may experience difficult thoughts about death or ending their life (suicide). Depression lasts longer than two weeks, doesn't usually go away on its own, and impacts your life. It's a real illness, and it is very treatable. It's important to seek help if you're concerned about depression."]
+    },
+    {"tag": "creators",
+        "patterns":["Who created you?", "Who are your creators?"],
+        "responses":["My Creators are Arlie, Jeremy and Raphael, The teacher who taught them how to make me is Mr. Aliac. I am their Final project for their Intelligent Systems 2 Course."]
+
     }
 
     ]

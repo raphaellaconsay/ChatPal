@@ -55,7 +55,7 @@ model.add(Dense(num_classes, activation='softmax'))
 model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 model.summary()
-epochs = 500
+epochs = 150
 history = model.fit(padded_sequences, np.array(training_labels), epochs=epochs)
 
 model.save("chat_modelLSTM")

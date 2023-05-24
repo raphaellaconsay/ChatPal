@@ -3,7 +3,7 @@
 ### **Team Eng^3**
 ##### - Charis Arlie Baclayon
 ##### - Jeremy Jules Flores
-##### - Raphael Pierri Antonni Laconsay
+##### - Raphael Pierre Antonni Laconsay
 
 ---
 

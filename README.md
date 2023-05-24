@@ -1,9 +1,9 @@
 # Chatpal
 
 ### **Team Eng^3**
-##### - Arlie Baclayon
-##### - Jeremy Flores
-##### - Raphael Laconsay
+##### - Charis Arlie Baclayon
+##### - Jeremy Jules Flores
+##### - Raphael Pierre Antonni Laconsay
 
 ---
 
